@@ -1,0 +1,17 @@
+[
+    {
+        "text": "Work",
+        "to": "/work",
+        "key": "work"
+    },
+    {
+        "text": "Services",
+        "to": "/work",
+        "key": "services"
+    },
+    {
+        "text": "Contact",
+        "to": "/work",
+        "key": "contact"
+    }
+]
