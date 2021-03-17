@@ -4,13 +4,13 @@ import { GatsbyImage, getImage, getSrc } from 'gatsby-plugin-image'
 import ReactPageScroller from 'react-page-scroller'
 import ReactPlayer from 'react-player/lazy'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
-import { motion, useViewportScroll, useAnimation } from 'framer-motion'
+import { motion, useAnimation } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { CustomButton, CustomLink } from '../components/CustomLink'
 
 import '../styles/home.css'
 
-const FadeInWhenVisible = ({ children, delay = 0 }) => {
+const FadeInWhenVisible = ({ children, delay = 0, className }) => {
   const controls = useAnimation()
   const [ref, inView] = useInView()
 
@@ -24,6 +24,7 @@ const FadeInWhenVisible = ({ children, delay = 0 }) => {
 
   return (
     <motion.div
+      className={className}
       ref={ref}
       animate={controls}
       initial="hidden"
@@ -35,7 +36,7 @@ const FadeInWhenVisible = ({ children, delay = 0 }) => {
         },
         hidden: {
           opacity: 0,
-          translateY: '-50px',
+          translateY: '-100px',
         },
       }}
     >
@@ -43,6 +44,10 @@ const FadeInWhenVisible = ({ children, delay = 0 }) => {
     </motion.div>
   )
 }
+
+const TopBar = () => (
+  <hr className="absolute top-0 left-0 z-10 w-full h-1 bg-white" />
+)
 
 const FullHeightSection = ({
   imgClassName,
@@ -68,11 +73,16 @@ const FullHeightSection = ({
         WebkitUserDrag: 'none',
       }}
     />
+    <TopBar />
+
     {sectionTitle ? (
-      <div className="z-20 p-6 sm:max-w-4xl bg-black-transparent">
+      <FadeInWhenVisible
+        delay={0.4}
+        className="relative z-20 p-6 sm:max-w-4xl bg-black-transparent"
+      >
         <h1 className="text-white uppercase">{sectionTitle}</h1>
         {children}
-      </div>
+      </FadeInWhenVisible>
     ) : null}
     {childrenOnly ? <>{children}</> : null}
   </section>
@@ -119,30 +129,36 @@ const FullHeightVideoSection = ({
       muted
       playsinline
     />
+    {!firstSection ? <TopBar /> : null}
+
     {sectionTitle ? (
-      <FadeInWhenVisible>
-        <div
-          className={`z-20 p-6 sm:max-w-4xl ${
-            firstSection ? '' : 'bg-black-transparent'
+      <FadeInWhenVisible
+        className={`z-20 p-6 sm:max-w-4xl ${
+          firstSection ? '' : 'bg-black-transparent'
+        }`}
+      >
+        <h1
+          className={`text-white uppercase ${
+            firstSection ? 'sm:text-6xl text-center' : ''
           }`}
+          style={
+            firstSection
+              ? {
+                  textShadow:
+                    'rgb(0 0 0 / 59%) 2px 2px 13px, rgb(73 64 125 / 35%) 2px 4px 7px',
+                }
+              : null
+          }
         >
-          <h1
-            className={`text-white uppercase ${
-              firstSection ? 'sm:text-6xl text-center' : ''
-            }`}
-            style={
-              firstSection
-                ? {
-                    textShadow:
-                      'rgb(0 0 0 / 59%) 2px 2px 13px, rgb(73 64 125 / 35%) 2px 4px 7px',
-                  }
-                : null
-            }
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
           >
             {sectionTitle}
-          </h1>
-          {children}
-        </div>
+          </motion.div>
+        </h1>
+        {children}
       </FadeInWhenVisible>
     ) : null}
   </section>
@@ -203,7 +219,7 @@ const HomePage = ({ data }) => {
       >
         <FullHeightVideoSection
           id="intro"
-          url="https://arvy.studio/wp-content/uploads/2021/01/Arvy%20Studio%20Intro%2002-2.m4v"
+          url="https://arvy.studio/wp-content/uploads/2021/03/ArvyStudioIntro.m4v"
           sectionTitle="Idea. Visualization. Reality."
           firstSection="true"
           poster={
@@ -218,34 +234,25 @@ const HomePage = ({ data }) => {
           imgClassName="object-cover w-full h-screen"
           imgAlt="Arvy Studio Exteriors"
         >
-          <hr className="absolute top-0 left-0 z-10 w-full h-1 bg-white" />
-          <FadeInWhenVisible delay="0.2">
-            <p>
-              An architectural project is only a project until you can see it
-              and feel it. Then it becomes a dream and an endless source for the
-              imagination.
-            </p>
-          </FadeInWhenVisible>
-          <FadeInWhenVisible delay="0.4">
-            <p>
-              We breathe life into our visualisations by paying special
-              attention to the little things that make a difference : a sun
-              beam, a reflexion.
-            </p>
-          </FadeInWhenVisible>
-          <FadeInWhenVisible delay="0.6">
-            <FeaturesList>
-              <li>Still images</li>
-              <li>360 panoramas</li>
-              <li>3d floorplans</li>
-            </FeaturesList>
-          </FadeInWhenVisible>
-          <FadeInWhenVisible delay="0.8">
-            <LinkList>
-              <CustomLink to="/">Learn more</CustomLink>
-              <CustomLink to="/work">Full portfolio</CustomLink>
-            </LinkList>
-          </FadeInWhenVisible>
+          <p>
+            An architectural project is only a project until you can see it and
+            feel it. Then it becomes a dream and an endless source for the
+            imagination.
+          </p>
+          <p>
+            We breathe life into our visualisations by paying special attention
+            to the little things that make a difference : a sun beam, a
+            reflexion.
+          </p>
+          <FeaturesList>
+            <li>Still images</li>
+            <li>360 panoramas</li>
+            <li>3d floorplans</li>
+          </FeaturesList>
+          <LinkList>
+            <CustomLink to="/">Learn more</CustomLink>
+            <CustomLink to="/work">Full portfolio</CustomLink>
+          </LinkList>
         </FullHeightSection>
         <FullHeightSection
           id="interiors"
@@ -254,7 +261,6 @@ const HomePage = ({ data }) => {
           imgClassName="object-cover w-full h-screen"
           imgAlt="Arvy Studio Interiors"
         >
-          <hr className="absolute top-0 left-0 z-10 w-full h-1 bg-white" />
           <p>
             What is the difference between an appartment and a home ? The first
             one is just as set of walls and some materials, the second sounds
@@ -276,14 +282,13 @@ const HomePage = ({ data }) => {
         </FullHeightSection>
         <FullHeightVideoSection
           id="animation"
-          url="https://arvy.studio/wp-content/uploads/2021/01/ARVY_Services_Animation_02.m4v"
+          url="https://arvy.studio/wp-content/uploads/2021/03/ArvyStudioExteriors.m4v"
           sectionTitle="Animations"
           poster={
             data.posterImage.childImageSharp.gatsbyImageData.placeholder
               .fallback
           }
         >
-          <hr className="absolute top-0 left-0 z-10 w-full h-1 bg-white" />
           <p>1-2-3 Action!</p>
           <p>
             Images are a cool – 60 images per second is even cooler. With our
@@ -309,14 +314,16 @@ const HomePage = ({ data }) => {
           imgAlt="Arvy Studio Contact"
           childrenOnly
         >
-          <hr className="absolute top-0 left-0 z-10 w-full h-1 bg-white" />
           <hr
             className="absolute top-0 z-10 w-1 h-full bg-white left-1/2"
             style={{
               transform: 'translateX(-2px)',
             }}
           />
-          <div className="z-20 p-6 sm:max-w-3xl lg:max-w-5xl xl:max-w-7xl bg-black-transparent">
+          <FadeInWhenVisible
+            delay={0.4}
+            className="z-20 p-6 sm:max-w-3xl lg:max-w-5xl xl:max-w-7xl bg-black-transparent"
+          >
             <div className="flex flex-wrap">
               <div className="w-full p-6 md:pr-12 md:w-1/2">
                 <h3>Structure. Materials. Environment. Light. Snap.</h3>
@@ -484,7 +491,7 @@ const HomePage = ({ data }) => {
                 </Formik>
               </div>
             </div>
-          </div>
+          </FadeInWhenVisible>
         </FullHeightSection>
       </ReactPageScroller>
       <PageNumbers currentPage={currentPage} setCurrentPage={setCurrentPage} />
