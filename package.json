@@ -14,7 +14,10 @@
     "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1"
   },
   "dependencies": {
+    "formik": "^2.2.6",
+    "framer-motion": "^3.10.5",
     "gatsby": "^3.0.0",
+    "gatsby-plugin-gatsby-cloud": "^2.0.0",
     "gatsby-plugin-image": "^1.0.0",
     "gatsby-plugin-sharp": "^3.0.0",
     "gatsby-source-filesystem": "^3.0.0",
@@ -22,6 +25,7 @@
     "gatsby-transformer-sharp": "^3.0.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-intersection-observer": "^8.31.0",
     "react-page-scroller": "^2.0.11-beta",
     "react-player": "^2.9.0"
   },
@@ -40,6 +44,7 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-tailwind": "^0.2.1",
     "gatsby-plugin-postcss": "^3.7.0",
+    "gatsby-plugin-webpack-bundle-analyser-v2": "^1.1.20",
     "postcss": "^8.2.6",
     "prettier": "^2.2.1",
     "tailwindcss": "^2.0.3"

@@ -33,6 +33,12 @@ module.exports = {
       resolve: 'gatsby-plugin-image',
     },
     {
+      resolve: 'gatsby-plugin-gatsby-cloud',
+    },
+    {
+      resolve: 'gatsby-plugin-webpack-bundle-analyser-v2',
+    },
+    {
       resolve: `gatsby-source-filesystem`,
       options: {
         name: `data`,
